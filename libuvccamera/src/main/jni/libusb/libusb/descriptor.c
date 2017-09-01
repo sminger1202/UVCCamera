@@ -297,6 +297,7 @@ static int parse_interface(libusb_context *ctx,
 		/* Skip over any interface, class or vendor descriptors */
 		while (size >= LIBUSB_DT_HEADER_SIZE/*DESC_HEADER_LENGTH*/) {
 			usbi_parse_descriptor(buffer, "bb", &header, 0);
+            usbi_err(ctx, "buffer: (%s), header(%d)", buffer, header.bLength);
 			if UNLIKELY(header.bLength < LIBUSB_DT_HEADER_SIZE/*DESC_HEADER_LENGTH*/) {
 				usbi_err(ctx,
 					 "invalid extra intf desc len (%d)",

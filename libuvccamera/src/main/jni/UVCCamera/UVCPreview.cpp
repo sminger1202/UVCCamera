@@ -26,7 +26,7 @@
 #include <linux/time.h>
 #include <unistd.h>
 
-#if 1	// set 1 if you don't need debug log
+#if 0	// set 1 if you don't need debug log
 	#ifndef LOG_NDEBUG
 		#define	LOG_NDEBUG		// w/o LOGV/LOGD/MARK
 	#endif
@@ -192,6 +192,7 @@ int UVCPreview::setPreviewDisplay(ANativeWindow *preview_window) {
 	ENTER();
 	pthread_mutex_lock(&preview_mutex);
 	{
+	    LOGE("setPreviewDisplay start");
 		if (mPreviewWindow != preview_window) {
 			if (mPreviewWindow)
 				ANativeWindow_release(mPreviewWindow);
@@ -526,6 +527,7 @@ void UVCPreview::do_preview(uvc_stream_ctrl_t *ctrl) {
 #endif
 		if (frameMode) {
 			// MJPEG mode
+			LOGE("MJPEG mode draw_preview_one");
 			for ( ; LIKELY(isRunning()) ; ) {
 				frame_mjpeg = waitPreviewFrame();
 				if (LIKELY(frame_mjpeg)) {
@@ -533,6 +535,7 @@ void UVCPreview::do_preview(uvc_stream_ctrl_t *ctrl) {
 					result = uvc_mjpeg2yuyv(frame_mjpeg, frame);   // MJPEG => yuyv
 					recycle_frame(frame_mjpeg);
 					if (LIKELY(!result)) {
+					    LOGE("yuvyv mode draw_preview_one start");
 						frame = draw_preview_one(frame, &mPreviewWindow, uvc_any2rgbx, 4);
 						addCaptureFrame(frame);
 					} else {
@@ -542,9 +545,11 @@ void UVCPreview::do_preview(uvc_stream_ctrl_t *ctrl) {
 			}
 		} else {
 			// yuvyv mode
+			LOGE("yuvyv mode draw_preview_one");
 			for ( ; LIKELY(isRunning()) ; ) {
 				frame = waitPreviewFrame();
 				if (LIKELY(frame)) {
+				    LOGE("yuvyv mode draw_preview_one start");
 					frame = draw_preview_one(frame, &mPreviewWindow, uvc_any2rgbx, 4);
 					addCaptureFrame(frame);
 				}

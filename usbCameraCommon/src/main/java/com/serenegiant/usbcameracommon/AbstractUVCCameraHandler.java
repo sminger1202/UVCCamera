@@ -60,7 +60,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -605,6 +604,12 @@ abstract class AbstractUVCCameraHandler extends Handler {
 		private final IFrameCallback mIFrameCallback = new IFrameCallback() {
 			@Override
 			public void onFrame(final ByteBuffer frame) {
+				if (frame == null) {
+					Log.e(TAG, "IFrameCallback: onFrame frame is null");
+				} else {
+					Log.e(TAG, "IFrameCallback: onFrame frame is not null");
+				}
+
 				final MediaVideoBufferEncoder videoEncoder;
 				synchronized (mSync) {
 					videoEncoder = mVideoEncoder;
